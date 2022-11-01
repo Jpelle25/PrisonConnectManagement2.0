@@ -3,6 +3,9 @@ package com.csc340.pcm.views;
 import com.csc340.pcm.security.SecurityService;
 import com.csc340.pcm.views.admin.AdminView;
 import com.csc340.pcm.views.admin.DashboardView;
+import com.csc340.pcm.views.organization.ApprovedDeniedEvents;
+import com.csc340.pcm.views.organization.EventRegistration;
+import com.csc340.pcm.views.organization.EventScheduler;
 import com.csc340.pcm.views.organization.OrganizationView;
 import com.csc340.pcm.views.visitor.VisitorView;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -30,6 +33,7 @@ public class MainLayout extends AppLayout {
 
         Button  logout = new Button("Log out", e -> securityService.logout());
 
+
         HorizontalLayout header = new HorizontalLayout(
                 new DrawerToggle(),
                 logo,
@@ -52,23 +56,36 @@ public class MainLayout extends AppLayout {
         adminLink.setHighlightCondition(HighlightConditions.sameLocation());
         visitorLink.setHighlightCondition(HighlightConditions.sameLocation());
 
+        //Admin View Direction
         if(securityService.getAuthenticatedUser().getUsername() == "admin"){
             addToDrawer(new VerticalLayout(
                     adminLink,
                     new RouterLink("Dashboard", DashboardView.class))
             );
         }
+
+        //Organization View Direction
         else if(securityService.getAuthenticatedUser().getUsername() == "organ"){
-            addToDrawer(new VerticalLayout(
-                    organLink
-            ));
+
+            VerticalLayout organizationTabs = new VerticalLayout(
+                    organLink,
+                    new RouterLink("Approved/Denied Events", ApprovedDeniedEvents.class),
+                    new RouterLink("Event Registration", EventRegistration.class),
+                    new RouterLink("Event Scheduler", EventScheduler.class)
+            );
+            addToDrawer(organizationTabs);
+
         }
+
+        //Visitor View Direction
         else{
             addToDrawer(new VerticalLayout(
                     visitorLink
             ));
         }
 
+
     }
+
 
 }
